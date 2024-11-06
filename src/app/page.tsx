@@ -4,10 +4,23 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './store/store';
 import { increment, decrement, incrementByAmount } from './store/reducers/slice';
-
+import { fetchData } from './store/reducers/newsSlice';
+import { useEffect } from 'react';
 export default function HomePage() {
   const count = useSelector((state: RootState) => state.counter.value);
   const dispatch = useDispatch<AppDispatch>();
+  const { data, loading, error } = useSelector((state: RootState) => state.newsapi);
+ console.log("test")
+
+ useEffect(() => {
+  dispatch(fetchData());
+}, [dispatch]);
+
+if (loading) return <p>Chargement...</p>;
+if (error) return <p>Erreur : {error}</p>;
+
+
+
 
   return (
     <div>
@@ -18,6 +31,7 @@ export default function HomePage() {
       <p> -- </p>
       <button onClick={() => dispatch(incrementByAmount(-6))}>Dnécrémenter -6</button>
       
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }

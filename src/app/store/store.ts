@@ -1,10 +1,10 @@
 // lib/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import { counterSlice } from './reducers/slice';
-
+import newsSlice from './reducers/newsSlice'
 export const makeStore = () => {
   return configureStore({
-    reducer: {counter : counterSlice.reducer},
+    reducer: {counter : counterSlice.reducer, newsapi :newsSlice },
   
   });
 };
