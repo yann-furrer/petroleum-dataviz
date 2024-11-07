@@ -43,6 +43,6 @@ const Map: React.FC = () => {
       map.current?.remove();
     };
   }, []);
-  return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
+  return <div ref={mapContainer} className="w-full h-full" />;
 };
 export default Map;
