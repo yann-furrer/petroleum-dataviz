@@ -2,10 +2,18 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { counterSlice } from './reducers/slice';
 import newsSlice from './reducers/newsSlice'
+import pipelineSlice from './reducers/pipelineSlice';
 export const makeStore = () => {
   return configureStore({
-    reducer: {counter : counterSlice.reducer, newsapi :newsSlice },
-  
+    reducer: {counter : counterSlice.reducer, 
+      newsapi :newsSlice, 
+      pipelineapi : pipelineSlice
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+      
+        serializableCheck: false,
+      }),
   });
 };
 

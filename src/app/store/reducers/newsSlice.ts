@@ -14,7 +14,10 @@ const initialState: DataState = {
 
 // Thunk pour appeler l'API
 export const fetchData = createAsyncThunk('data/fetchData', async () => {
-  const response = await fetch('https://672b4177976a834dd026461a.mockapi.io/redux_test_endpoint');
+  const response = await fetch('https://petroleum-dataviz-api-recette.up.railway.app/api/news');
+ // const response = await fetch('https://672b4177976a834dd026461a.mockapi.io/redux_test_endpoint');
+  // petroleum-dataviz-api-recette.up.railway.apppetroleum-dataviz-api-recette.up.railway.app
+  
   if (!response.ok) {
     throw new Error('Erreur lors de la récupération des données');
   }

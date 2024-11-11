@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 
 export default function HomePage() {
   dotenv.config();
-  console.log(process.env.TEST)
   const count = useSelector((state: RootState) => state.counter.value);
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector((state: RootState) => state.newsapi);

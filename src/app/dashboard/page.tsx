@@ -1,10 +1,23 @@
+"use client";
 import Map from '../component/Map'
 import Header from '../component/Header'
 import Sidebar from '../component/Sidebar'
 import MainContent from '../component/Maincontent'
+import { useEffect } from 'react'
 
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store/store';
+import { fetchData, filterByCountry } from '../store/reducers/pipelineSlice';
 export default function Dashboard(){
+  // const dispatch = useDispatch<AppDispatch>();
+  // const { data, loading, error } = useSelector((state: RootState) => state.newsapi);
 
+
+//  useEffect(() => {
+//   dispatch(fetchData());
+// }, [dispatch]);
+
+   // console.log(data)
     return( <div className="flex">
     <Sidebar />
     <div className="flex flex-col w-full">
