@@ -23,7 +23,7 @@ const Map: React.FC = () => {
     }
   
 
-
+     if (loading || !data || map.current) return;
    // if (map.current) return; // Initialise la carte seulement une fois
     if (mapContainer.current) {
       map.current = new mapboxgl.Map({
@@ -34,16 +34,70 @@ const Map: React.FC = () => {
       });
 
       map.current.on("load", () => {
-        const point = turf.point([-74.5, 40]);
-        const buffer = turf.buffer(point, 5, { units: "kilometers" });
-        map.current?.addSource("buffer", { type: "geojson", data: buffer });
-      map.current?.addLayer({
-          id: "buffer-layer",
-          type: "fill",
-          source: "buffer",
-          layout: {},
-          paint: { "fill-color": "#888888", "fill-opacity": 0.4 },
-        });
+         console.log(data)
+
+        for (const key in data.features) {
+          if(data.features[key].geometry){
+        
+           // console.log("dd" , key)
+            
+            // const pipeline = data[key];
+           // console.log("pipeline",data.features[key].geometry.coordinates)
+
+            const line = turf.lineString(data.features[key].geometry.coordinates);
+      
+            // Ajoutez une source pour chaque pipeline
+            map.current?.addSource(`pipeline-${data.features[key].properties.ProjectID}`, {
+              type: 'geojson',
+              data: line,
+            });
+      
+            // Définissez la couleur et l'épaisseur en fonction des propriétés du pipeline
+            const color = data.features[key].properties.Status === 'Operating' ? '#FF0000' : '#0000FF'; // rouge pour haute pression, bleu pour basse pression
+            const lineWidth = data.features[key].properties.Capacity > 500 ? 4 : 2; // épaisseur conditionnelle en fonction de la longueur
+      
+            // Ajoutez un layer pour chaque pipeline
+            map.current?.addLayer({
+              id: `pipeline-layer-${data.features[key].properties.ProjectID}`,
+              type: 'line',
+              source: `pipeline-${data.features[key].properties.ProjectID}`,
+              layout: {},
+              paint: {
+                'line-color': color,
+                'line-width': lineWidth,
+              },
+           });
+      
+            // Ajoutez des événements pour afficher les détails sur le survol
+            map.current?.on('mouseenter', `pipeline-layer-${data.features[key].properties.ProjectID}`, (e) => {
+              map.current!.getCanvas().style.cursor = 'pointer';
+              const coordinates = e.lngLat;
+              const description = `Pipeline ID: ${data.features[key].properties.ProjectID}, Type: ${data.features[key].properties.Fuel}, Length: ${data.features[key].properties.LengthKnownKm} km`;
+      
+              new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map.current!);
+            });
+      
+            map.current?.on('mouseleave', `pipeline-layer-${data.features[key].properties.ProjectID}`, () => {
+              map.current!.getCanvas().style.cursor = '';
+              map.current!.getPopup()?.remove();
+            });
+          
+          }
+        }
+
+//        const point = turf.point([-74.5, 40]);
+//        const buffer = turf.buffer(point, 5, { units: "kilometers" });
+//        map.current?.addSource("buffer", { type: "geojson", data: buffer });
+//      map.current?.addLayer({
+//          id: "buffer-layer",
+//          type: "fill",
+//          source: "buffer",
+//          layout: {},
+//          paint: { "fill-color": "#888888", "fill-opacity": 0.4 },
+//        });
     
 
         // Ajoutez une couche Mapbox pour les frontières administratives
